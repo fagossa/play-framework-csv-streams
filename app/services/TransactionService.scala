@@ -9,7 +9,9 @@ import repositories.TransactionRepository
 import models.Transaction
 
 class TransactionService(repo: TransactionRepository) {
-  def transactions()(implicit ec: ExecutionContext): Source[Transaction, Future[IOResult]] =
+
+  def transactions(query: Option[String])(implicit ec: ExecutionContext): Source[Transaction, Future[IOResult]] =
     repo.readFile()
+      .filter(t => t.matchQuery(query))
 
 }

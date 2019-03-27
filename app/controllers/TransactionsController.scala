@@ -23,8 +23,8 @@ class TransactionsController(
     * will be called when the application receives a `GET` request with
     * a path of `/`.
     */
-  def transactions = Action.async {
-    val value: Source[JsValue, Future[IOResult]] = transactionService.transactions()
+  def transactions(query: Option[String]) = Action.async {
+    val value: Source[JsValue, Future[IOResult]] = transactionService.transactions(query)
       .map { t => Json.toJson(t)}
 
     Future(Ok.chunked(value).as("application/json"))
