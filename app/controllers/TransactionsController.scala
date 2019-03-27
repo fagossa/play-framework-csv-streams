@@ -1,6 +1,10 @@
 package controllers
 
-import play.api.libs.json.{ Json }
+import scala.concurrent.Future
+
+import akka.stream.IOResult
+import akka.stream.scaladsl.Source
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 
 import services.TransactionService
@@ -19,10 +23,11 @@ class TransactionsController(
     * will be called when the application receives a `GET` request with
     * a path of `/`.
     */
-  def index = Action.async {
-    transactionService.transactions()
-      .map(Json.toJson(_))
-        .map(js => Ok(js).as("application/json"))
+  def transactions = Action.async {
+    val value: Source[JsValue, Future[IOResult]] = transactionService.transactions()
+      .map { t => Json.toJson(t)}
+
+    Future(Ok.chunked(value).as("application/json"))
   }
 
 }

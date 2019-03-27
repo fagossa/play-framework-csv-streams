@@ -1,3 +1,6 @@
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import akka.stream.scaladsl.Sink
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play._
 import repositories.TransactionRepository
@@ -14,6 +17,10 @@ class ApplicationSpec extends PlaySpec
   with MyApplicationFactory
   with ScalaFutures {
 
+
+  lazy implicit val actorSystem: ActorSystem = ActorSystem.create("test")
+
+/*
   "Routes" should {
     "send 404 on a bad request" in {
       route(app, FakeRequest(GET, "/boum")).map(status(_)) mustBe Some(NOT_FOUND)
@@ -29,6 +36,7 @@ class ApplicationSpec extends PlaySpec
       contentAsString(home) must include("Your new application is ready.")
     }
   }
+*/
 
   "Transaction" should {
     "be created from valid lines" in {
@@ -56,15 +64,18 @@ class ApplicationSpec extends PlaySpec
   "TransactionRespository" should {
     val repo = new TransactionRepository
     "render the index page" in {
+      implicit val materializer = ActorMaterializer()
 
-     /* // when
-      repo.readFile()
+     // when
+      val result: List[Transaction] = repo.readFile()
+        .runWith(Sink.seq)
+        .futureValue
+        .toList
+        .filter(_.ibanSource == "MC040038008666489H76L562481")
 
-      val home = route(app, FakeRequest(GET, "/")).get
+      info(result.headOption.toString)
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("application/json")
-      contentAsString(home) must include("Your new application is ready.")*/
+      result.size must be (1)
     }
   }
 }

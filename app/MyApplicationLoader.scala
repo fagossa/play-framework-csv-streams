@@ -1,3 +1,4 @@
+import repositories.TransactionRepository
 import play.api._
 import play.api.routing.Router
 
@@ -17,8 +18,9 @@ class MyComponents(context: ApplicationLoader.Context)
   with play.filters.HttpFiltersComponents
   with _root_.controllers.AssetsComponents {
 
+  lazy val repo = new TransactionRepository
 
-  lazy val transactionService = new TransactionService()
+  lazy val transactionService = new TransactionService(repo)
 
   lazy val homeController = new _root_.controllers.TransactionsController(transactionService, controllerComponents)
 
