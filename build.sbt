@@ -20,5 +20,6 @@ ThisBuild / scalacOptions ++= List(
 
 libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test,
-  "com.typesafe.play" %% "play-json" % "2.6.10"
+  "com.typesafe.play" %% "play-json" % "2.6.10",
+  "com.typesafe.akka" %% "akka-stream" % "2.5.21"
 )

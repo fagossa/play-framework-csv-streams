@@ -22,7 +22,7 @@ class TransactionsController(
   def index = Action.async {
     transactionService.transactions()
       .map(Json.toJson(_))
-        .map(js => Ok(js))
+        .map(js => Ok(js).as("application/json"))
   }
 
 }
