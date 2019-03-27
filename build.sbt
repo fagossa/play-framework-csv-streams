@@ -18,4 +18,7 @@ ThisBuild / scalacOptions ++= List(
   "-unchecked",
 )
 
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test
+libraryDependencies ++= Seq(
+  "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test,
+  "com.typesafe.play" %% "play-json" % "2.6.10"
+)

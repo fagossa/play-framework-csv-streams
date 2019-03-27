@@ -1,6 +1,8 @@
 import play.api._
 import play.api.routing.Router
 
+import services.TransactionService
+
 class MyApplicationLoader extends ApplicationLoader {
   private var components: MyComponents = _
 
@@ -15,7 +17,10 @@ class MyComponents(context: ApplicationLoader.Context)
   with play.filters.HttpFiltersComponents
   with _root_.controllers.AssetsComponents {
 
-  lazy val homeController = new _root_.controllers.HomeController(controllerComponents)
+
+  lazy val transactionService = new TransactionService()
+
+  lazy val homeController = new _root_.controllers.TransactionsController(transactionService, controllerComponents)
 
   lazy val router: Router = new _root_.router.Routes(httpErrorHandler, homeController, assets)
 }
